@@ -10,14 +10,35 @@ import { router } from '@inertiajs/vue3'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { i18nVue } from 'laravel-vue-i18n'; 
+import vSelect from 'vue-select';
+import {POSIcon } from '@/Components';
 
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
 
+
+
+
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
+    resolve: (name => {
+        let parts = name.split('::')
+        let type = false
+        if (parts.length > 1) {
+            type = parts[0]
+        }
+        if (type) {
+            let nameVue = parts[1].split('.')[0];
+            return resolvePageComponent(`../../Modules/${parts[0]}/resources/assets/js/Pages/${nameVue}.vue`, import.meta.glob([
+                `../../Modules/**/resources/assets/js/Pages/**/*.vue`,
+            ]));
+        }else {
+            return resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob([
+                './Pages/**/*.vue',
+            ]));
+        }
+    }),
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)

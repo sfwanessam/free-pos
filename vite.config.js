@@ -9,7 +9,13 @@ export default defineConfig({
     },
     plugins: [
         laravel({
-            input: 'resources/js/app.js',
+            input: [
+                'resources/js/app.js',
+                'resources/**/*.vue',
+                'resources/**/**/*.vue',
+                './Modules/**/resources/assets/js/**/*.vue',
+                './Modules/**/resources/assets/js/**/**/*.vue',
+            ],
             refresh: true,
         }),
         vue({
